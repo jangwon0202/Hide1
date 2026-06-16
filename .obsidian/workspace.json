@@ -1,0 +1,237 @@
+{
+  "main": {
+    "id": "c92a0265fb8a6aa0",
+    "type": "split",
+    "children": [
+      {
+        "id": "e446ef3008310c49",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b014f45396a11530",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Hide/숨바꼭질 게임/핵심 아키텍처.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "핵심 아키텍처"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "512868a144a2ba09",
+    "type": "split",
+    "children": [
+      {
+        "id": "027316bff83b3c26",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "999eb1bc6c6d8e94",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "파일 탐색기"
+            }
+          },
+          {
+            "id": "8ff8c0494193ddbf",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "검색"
+            }
+          },
+          {
+            "id": "d87f9b51c29219b6",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "북마크"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "8cc621572a6b7c83",
+    "type": "split",
+    "children": [
+      {
+        "id": "44bc74d67e946007",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1e4c6a7b5a0380b3",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "무제.md",
+                "collapseAll": false,
+                "extraContext": true,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "무제 의 백링크"
+            }
+          },
+          {
+            "id": "1279b694247e88ef",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Hide/숨바꼭질 게임/핵심 아키텍처.md",
+                "linksCollapsed": true,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "핵심 아키텍처 의 나가는 링크"
+            }
+          },
+          {
+            "id": "8006bf69abfd8f38",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "태그"
+            }
+          },
+          {
+            "id": "8210bd88a88f73ea",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": true,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "모든 속성"
+            }
+          },
+          {
+            "id": "71ca5f1730475f47",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Hide/숨바꼭질 게임/핵심 아키텍처.md",
+                "followCursor": false,
+                "showSearch": true,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "핵심 아키텍처 의 개요"
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:빠른 전환기 열기": false,
+      "graph:그래프 뷰 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 일일 노트 열기": false,
+      "templates:템플릿 삽입": false,
+      "command-palette:명령어 팔레트 열기": false,
+      "bases:새 베이스 생성하기": false,
+      "obsidian-git:Open Git source control": false,
+      "obsidian-excalidraw-plugin:New drawing": false
+    }
+  },
+  "active": "b014f45396a11530",
+  "lastOpenFiles": [
+    "Hide/숨바꼭질 게임/제작 로드맵.md",
+    "Hide/숨바꼭질 게임/게임 프로젝트(숨바꼭질) 기획.md",
+    "환영합니다!.md",
+    "무제.md",
+    "무제.base",
+    "Logs/shadercompiler-UnityShaderCompiler.exe-2.log",
+    "Logs/shadercompiler-UnityShaderCompiler.exe-14.log",
+    "Hide/숨바꼭질 게임/핵심 아키텍처.md",
+    "Hide/숨바꼭질 게임",
+    "Hide",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Editor/Resources/FlatSkin/Font/Roboto-ThinItalic.ttf.meta",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Editor/Resources/FlatSkin/Font/Roboto-ThinItalic.ttf",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Editor/Resources/FlatSkin/Font/Roboto-Thin.ttf.meta",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Editor/Resources/FlatSkin/Font/Roboto-Thin.ttf",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Editor/Resources/FlatSkin/Font/Roboto-MediumItalic.ttf.meta",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Editor/Resources/FlatSkin/SearchSmallDownOn@2x.png",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Editor/Resources/FlatSkin/SearchSmallDownOn.png",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Editor/Resources/FlatSkin/SearchSmallDownOff@2x.png",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Editor/Resources/FlatSkin/SearchSmallDownOff.png",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Samples~/Resources/twotone_science_white_18dp.png",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Samples~/Resources/twotone_science_black_18dp.png",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Samples~/Resources/twotone_outdoor_grill_white_18dp.png",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Samples~/Resources/twotone_outdoor_grill_black_18dp.png",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Samples~/Resources/twotone_emoji_people_white_18dp.png",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Samples~/Resources/twotone_book_white_18dp.png",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/Documentation~/index.md",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/README.md",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/LICENSE.md",
+    "Library/PackageCache/com.unity.searcher@d45a78918735/CHANGELOG.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/includes/resources-video-icon.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/includes/resources-sample-project-icon.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/includes/resources-resources-icon.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/includes/resources-ebook-icon.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/includes/resources-howto-icon.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/includes/resources-documentation-icon.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/includes/resources-community-icon.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Samples~/README.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/whats-new.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/TableOfContents.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/UpgradeGuide.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/Samples.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/OffMeshLink.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/Reference.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/NavMoveToClickPoint.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/NavMoveToDestination.md",
+    "Library/PackageCache/com.unity.ai.navigation@c33a115e9883/Documentation~/NavMeshSurface.md"
+  ]
+}
