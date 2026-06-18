@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Hide/숨바꼭질 게임/핵심 아키텍처.md",
+                "file": "Hide/숨바꼭질 게임/게임 프로젝트(숨바꼭질) 기획.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "핵심 아키텍처"
+              "title": "게임 프로젝트(숨바꼭질) 기획"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Hide/숨바꼭질 게임/핵심 아키텍처.md",
+                "file": "Hide/숨바꼭질 게임/게임 프로젝트(숨바꼭질) 기획.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "핵심 아키텍처 의 개요"
+              "title": "게임 프로젝트(숨바꼭질) 기획 의 개요"
             }
           }
         ],
@@ -187,17 +187,19 @@
   },
   "active": "b014f45396a11530",
   "lastOpenFiles": [
-    "Assets/Mryotaisu/_Demo/DemoSettings.lighting.meta",
-    "Assets/Mryotaisu/_Demo/DemoSettings.lighting",
-    "Assets/Mryotaisu/_Demo/Demo.unity.meta",
-    "Assets/Mryotaisu/_Demo/Demo.unity",
-    "Assets/Mryotaisu/_Demo",
-    "Assets/Mryotaisu/Scripts/MuryotaisuDoorOpen.cs",
-    "Assets/Mryotaisu/Scripts/MuryotaisuDoorOpen.cs.meta",
-    "Assets/Mryotaisu/Scripts/MuryotaisuController.cs.meta",
-    "Assets/Mryotaisu/Scripts/MuryotaisuController.cs",
-    "Assets/Mryotaisu/Scripts",
-    "Assets/Mryotaisu/Prefabs/Muryotaisu.prefab.meta",
+    "Hide/숨바꼭질 게임/제작 로드맵.md",
+    "Hide/숨바꼭질 게임/게임 프로젝트(숨바꼭질) 기획.md",
+    "Hide/숨바꼭질 게임/핵심 아키텍처.md",
+    "Temp/UnityTempFile-e626bf89b8ff55646931e80fdd1306a5",
+    "Library/Artifacts/eb/ebce5deb90b516df1eb2249e1951a35f",
+    "Library/TempArtifacts/Extra/0c1ca94eef07a1048869fc6902cccbe8.info",
+    "Library/ShaderCache/shader/Lit9335/00/fe4657f8b2572c18584c4745070f884e.bin",
+    "Library/ShaderCache/shader/Lit9335/00/29570823faa648675070d3f3cdab0101.bin",
+    "Library/ShaderCache/shader/Lit9335/00/ffa4d3c71983fbba7238389654ab789e.bin",
+    "Library/ShaderCache/shader/Lit9335/00/dd81284c20888c0fb388cb16b6b5e12f.bin",
+    "Library/ShaderCache/shader/Lit9335/00/dd90c8204e8168848e872797ae478735.bin",
+    "Library/Artifacts/b0/b069cd4e78db5ed83c70aa745459e001",
+    "Library/ShaderCache/shader/Lit9335/00/ad61a7d4e2be702479aada77f2423914.bin",
     "Assets/Mryotaisu/Models/Materials/LevelNormal.png",
     "Assets/Mryotaisu/Models/Materials/LevelMetal.png",
     "Assets/Mryotaisu/Models/Materials/LevelDif.png",
@@ -208,11 +210,8 @@
     "Assets/Mryotaisu/Models/Materials/Hair.png",
     "Assets/Mryotaisu/Models/Materials/Face.png",
     "Assets/Mryotaisu/Models/Materials/BodyNormal.png",
-    "Hide/숨바꼭질 게임/제작 로드맵.md",
-    "Hide/숨바꼭질 게임/게임 프로젝트(숨바꼭질) 기획.md",
     "환영합니다!.md",
     "무제.md",
-    "Hide/숨바꼭질 게임/핵심 아키텍처.md",
     "Library/PackageCache/com.unity.searcher@d45a78918735/Documentation~/index.md",
     "Library/PackageCache/com.unity.searcher@d45a78918735/README.md",
     "Library/PackageCache/com.unity.searcher@d45a78918735/LICENSE.md",

@@ -6,24 +6,24 @@ namespace Muryotaisu
 {
     public class MuryotaisuController : MonoBehaviour
     {
-        private Animator animator;
+        private Animator animator; // 캐릭터의 걷기, 점프, idle 모션을 제어하는 애니메이터
 
         public float speed = 2; // Walking speed
         public float jumpSpeed = 2; // Jump speed
-        public float gravity = 1; //gravity
+        public float gravity = 1; //gravity (중력의 크기)
 
         public float rotas = 5; // Speed of rotation
 
-        public float startKocchi = 2; // Distance to camera for Kocchiflag firing <●><●>
+        public float startKocchi = 2; // 카메라가 캐릭터와 얼마나 가까워졌을 때 캐릭터가 카메라를 쳐다보게 할지 결정하는 기준 거리 변수
 
-        float second; // Time Measurement
+        float second; // 캐릭터가 idle 상태로 머무른 시간을 측정하는 변수
 
         int key = 0;
         string state;
         string prevState;
 
-        private CharacterController controller;
-        private Vector3 moveDirection = Vector3.zero;
+        private CharacterController controller; // 유니티 제공 물리 충돌 및 이동 컴포넌트
+        private Vector3 moveDirection = Vector3.zero; // 캐릭터가 이동하는 방향과 속도를 나타내는 벡터 변수(X, Y, Z축 방향으로의 이동 속도를 각각 저장)
 
         // Start is called before the first frame update
         void Start()
