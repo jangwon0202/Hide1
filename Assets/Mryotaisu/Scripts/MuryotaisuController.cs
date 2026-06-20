@@ -191,37 +191,45 @@ namespace Muryotaisu
             moveDirection.y = currentY;
 
 
-            // -------------- 바닥 판정 및 애니메이션 처리 --------------
+                // -------------- 바닥 판정 및 애니메이션 처리 --------------
+            string currentState = ""; // 현재 상태 로깅용 변수
+
             if (controller.isGrounded)
             {
                 // [수정점] 중력이 끝없이 누적되는 것을 방지합니다. 
                 // 땅에 오래 서 있을 때 중력이 무한히 더해지면 점프를 뛰어도 경사면 판정에 파묻혀 isGrounded가 고장나고 점프가 씹히는 원인이 됩니다.
+                // 단, jumpSpeed가 들어가서 y가 양수(위로 솟구침)일 때는 중력 리셋을 막아야 무한 점프가 안 됩니다.
                 if (moveDirection.y < 0)
                 {
                     moveDirection.y = -2f; // 바닥에 확실히 밀착되게 약간의 음수값만 유지
                 }
 
                 // 땅에 닿아 있다면 기본적으로 jump 플래그를 꺼줍니다.
-                // 이렇게 해야 연속 점프 시 애니메이터가 '끝난 상태'로 인식하여 모션 멈춤(프리징)을 방지합니다.
-                animator.SetBool("jumpFlag", false);
+                // 단, 점프를 막 누른 프레임(moveDirection.y > 0)일 때는 끄지 않습니다.
+                if (moveDirection.y <= 0)
+                {
+                    animator.SetBool("jumpFlag", false);
+                }
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     moveDirection.y = jumpSpeed;
                     
-                    // 점프를 누른 프레임에는 걷기/대기 모션만 끄고, 
-                    // 실제 점프 모션(jumpFlag)은 몸이 공중에 뜨는 다음 프레임(else 블록)에서 켜지도록 유도합니다.
+                    // 점프가 실행되는 순간 즉시 jumpFlag를 켭니다 (딜레이 방지)
+                    animator.SetBool("jumpFlag", true);
                     animator.SetBool("walkFlag", false);
                     animator.SetBool("idleFlag", false);
                     second = 0f;
+                    currentState = "점프 시작!";
                 }
-                else
+                else if (moveDirection.y <= 0) // 점프를 뛰고 솟구치는 찰나가 아닐 때만 걷기/대기 모션 실행
                 {
                     if (inputDir.magnitude > 0.1f)
                     {
                         animator.SetBool("walkFlag", true);
                         animator.SetBool("idleFlag", false);
                         second = 0;
+                        currentState = "걷기 (Walk)";
                     }
                     else
                     {
@@ -233,6 +241,11 @@ namespace Muryotaisu
                         {
                             animator.SetTrigger("idleBFlag");
                             second = 0;
+                            currentState = "대기 모션 2 (IdleB)";
+                        }
+                        else
+                        {
+                            currentState = "대기 중 (Idle)";
                         }
                     }
                 }
@@ -243,7 +256,12 @@ namespace Muryotaisu
                 animator.SetBool("jumpFlag", true);
                 animator.SetBool("walkFlag", false);
                 animator.SetBool("idleFlag", false);
+                currentState = "공중 (Jump/Fall)";
             }
+
+            // 로그 출력: 움직일 때나 공중에 있을 때만 상태를 보여주거나 매 프레임 다 띄울 수 있음.
+            // 너무 자주 뜨는 걸 피하려면 조건문을 넣어도 좋지만, 정확한 파악을 위해 그냥 찍어줍니다.
+            Debug.Log($"현재 상태: {currentState} | isGrounded: {controller.isGrounded} | jumpFlag: {animator.GetBool("jumpFlag")} | walkFlag: {animator.GetBool("walkFlag")}");
 
             moveDirection.y -= gravity * Time.deltaTime;
             controller.Move(moveDirection * Time.deltaTime);
