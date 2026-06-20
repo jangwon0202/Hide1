@@ -13,6 +13,9 @@ namespace Muryotaisu
         private CinemachineCamera cmCamera;
         private CinemachinePanTilt panTilt;
 
+        [Header("카메라 얼굴 위치 기준점")]
+        public Transform cameraTarget;
+
         [Header("1인칭 이동 설정")]
         public float speed = 6.0f; // 이동 속도
         public float jumpSpeed = 5.0f; // 점프 힘
@@ -129,9 +132,19 @@ namespace Muryotaisu
 
 
             // 바닥 기준 물리 이동 및 애니메이션 처리
-
             if (controller.isGrounded)
             {
+                // [수정점] 중력이 끝없이 누적되는 것을 방지합니다. 
+                // 땅에 오래 서 있을 때 중력이 무한히 더해지면 점프를 뛰어도 경사면 판정에 파묻혀 isGrounded가 고장나고 점프가 씹히는 원인이 됩니다.
+                if (moveDirection.y < 0)
+                {
+                    moveDirection.y = -2f; // 바닥에 확실히 밀착되게 약간의 음수값만 유지
+                }
+
+                // 땅에 닿아 있다면 기본적으로 jump 플래그를 꺼줍니다.
+                // 이렇게 해야 연속 점프 시 애니메이터가 '끝난 상태'로 인식하여 모션 멈춤(프리징)을 방지합니다.
+                animator.SetBool("jumpFlag", false);
+
                 float horizontal = Input.GetAxis("Horizontal");
                 float vertical = Input.GetAxis("Vertical");
 
@@ -148,37 +161,41 @@ namespace Muryotaisu
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     moveDirection.y = jumpSpeed;
-                }
-
-                // 애니메이션 Bleed 차단용 조건문
-                second += Time.deltaTime;
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    animator.SetBool("jumpFlag", true);
+                    
+                    // 점프를 누른 프레임에는 걷기/대기 모션만 끄고, 
+                    // 실제 점프 모션(jumpFlag)은 몸이 공중에 뜨는 다음 프레임(else 블록)에서 켜지도록 유도합니다.
                     animator.SetBool("walkFlag", false);
                     animator.SetBool("idleFlag", false);
-                }
-                else if (inputDir.magnitude > 0.1f)
-                {
-                    animator.SetBool("jumpFlag", false);
-                    animator.SetBool("walkFlag", true);
-                    animator.SetBool("idleFlag", false);
-                    second = 0;
-                }
-                else if (second >= 15f)
-                {
-                    animator.SetBool("jumpFlag", false);
-                    animator.SetBool("walkFlag", false);
-                    animator.SetBool("idleFlag", false);
-                    animator.SetTrigger("idleBFlag");
-                    second = 0;
+                    second = 0f;
                 }
                 else
                 {
-                    animator.SetBool("jumpFlag", false);
-                    animator.SetBool("walkFlag", false);
-                    animator.SetBool("idleFlag", true);
+                    if (inputDir.magnitude > 0.1f)
+                    {
+                        animator.SetBool("walkFlag", true);
+                        animator.SetBool("idleFlag", false);
+                        second = 0;
+                    }
+                    else
+                    {
+                        animator.SetBool("walkFlag", false);
+                        animator.SetBool("idleFlag", true);
+
+                        second += Time.deltaTime; // 움직이지 않을 때만 시간 측정
+                        if (second >= 15f)
+                        {
+                            animator.SetTrigger("idleBFlag");
+                            second = 0;
+                        }
+                    }
                 }
+            }
+            else
+            {
+                // 공중에 있을 때 (점프 중이거나 언덕에서 떨어질 때) 무조건 jumpFlag를 활성화
+                animator.SetBool("jumpFlag", true);
+                animator.SetBool("walkFlag", false);
+                animator.SetBool("idleFlag", false);
             }
 
             moveDirection.y -= gravity * Time.deltaTime;
