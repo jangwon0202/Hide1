@@ -196,40 +196,40 @@ namespace Muryotaisu
 
             if (controller.isGrounded)
             {
-<<<<<<< HEAD
+
                 // 중력이 바닥에 무한히 누적되어 파묻히는 현상 보정
-=======
-                // [수정점] 중력이 끝없이 누적되는 것을 방지합니다. 
+
+                // 중력이 끝없이 누적되는 것을 방지
                 // 땅에 오래 서 있을 때 중력이 무한히 더해지면 점프를 뛰어도 경사면 판정에 파묻혀 isGrounded가 고장나고 점프가 씹히는 원인이 됩니다.
                 // 단, jumpSpeed가 들어가서 y가 양수(위로 솟구침)일 때는 중력 리셋을 막아야 무한 점프가 안 됩니다.
->>>>>>> 565d22a8559e03a191c77780562323096d734aa5
+
                 if (moveDirection.y < 0)
                 {
                     moveDirection.y = -2f;
                 }
 
-<<<<<<< HEAD
+
                 // 💡 땅에 닿았으므로 일시정지했던 애니메이터 재생 속도를 정상(1배속)으로 완전히 풀어줍니다.
                 animator.speed = 1.0f;
-=======
+
                 // 땅에 닿아 있다면 기본적으로 jump 플래그를 꺼줍니다.
                 // 단, 점프를 막 누른 프레임(moveDirection.y > 0)일 때는 끄지 않습니다.
                 if (moveDirection.y <= 0)
                 {
                     animator.SetBool("jumpFlag", false);
                 }
->>>>>>> 565d22a8559e03a191c77780562323096d734aa5
+
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     moveDirection.y = jumpSpeed;
-<<<<<<< HEAD
+
 
                     // 점프가 시작되는 첫 프레임에는 땅 위 애니메이션을 즉시 끕니다.
-=======
+
                     
                     // 점프가 실행되는 순간 즉시 jumpFlag를 켭니다 (딜레이 방지)
->>>>>>> 565d22a8559e03a191c77780562323096d734aa5
+
                     animator.SetBool("jumpFlag", true);
                     animator.SetBool("walkFlag", false);
                     animator.SetBool("idleFlag", false);
@@ -274,7 +274,7 @@ namespace Muryotaisu
                 animator.SetBool("jumpFlag", true);
                 animator.SetBool("walkFlag", false);
                 animator.SetBool("idleFlag", false);
-<<<<<<< HEAD
+
                 second = 0f;
 
 
@@ -287,9 +287,8 @@ namespace Muryotaisu
                 {
                     animator.speed = 0f;
                 }
-=======
                 currentState = "공중 (Jump/Fall)";
->>>>>>> 565d22a8559e03a191c77780562323096d734aa5
+
             }
 
             // 로그 출력: 움직일 때나 공중에 있을 때만 상태를 보여주거나 매 프레임 다 띄울 수 있음.
