@@ -110,7 +110,7 @@ namespace Muryotaisu
             {
                 // [일반 모드]: 마우스 돌리는 대로 시선 회전
                 yRotation += mouseX;
-                
+
                 if (isFirstPerson)
                 {
                     // 1인칭일 때만 몸통이 마우스 회전을 똑같이 따라감
@@ -194,29 +194,30 @@ namespace Muryotaisu
             // -------------- 바닥 판정 및 애니메이션 처리 --------------
             if (controller.isGrounded)
             {
-                // [수정점] 중력이 끝없이 누적되는 것을 방지합니다. 
-                // 땅에 오래 서 있을 때 중력이 무한히 더해지면 점프를 뛰어도 경사면 판정에 파묻혀 isGrounded가 고장나고 점프가 씹히는 원인이 됩니다.
+                // 중력이 바닥에 무한히 누적되어 파묻히는 현상 보정
                 if (moveDirection.y < 0)
                 {
-                    moveDirection.y = -2f; // 바닥에 확실히 밀착되게 약간의 음수값만 유지
+                    moveDirection.y = -2f;
                 }
 
-                // 땅에 닿아 있다면 기본적으로 jump 플래그를 꺼줍니다.
-                // 이렇게 해야 연속 점프 시 애니메이터가 '끝난 상태'로 인식하여 모션 멈춤(프리징)을 방지합니다.
-                animator.SetBool("jumpFlag", false);
+                // 💡 땅에 닿았으므로 일시정지했던 애니메이터 재생 속도를 정상(1배속)으로 완전히 풀어줍니다.
+                animator.speed = 1.0f;
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     moveDirection.y = jumpSpeed;
-                    
-                    // 점프를 누른 프레임에는 걷기/대기 모션만 끄고, 
-                    // 실제 점프 모션(jumpFlag)은 몸이 공중에 뜨는 다음 프레임(else 블록)에서 켜지도록 유도합니다.
+
+                    // 점프가 시작되는 첫 프레임에는 땅 위 애니메이션을 즉시 끕니다.
+                    animator.SetBool("jumpFlag", true);
                     animator.SetBool("walkFlag", false);
                     animator.SetBool("idleFlag", false);
                     second = 0f;
                 }
                 else
                 {
+                    //  바닥에 확실히 착지한 유효 프레임에서만 점프 플래그를 정상 해제합니다.
+                    animator.SetBool("jumpFlag", false);
+
                     if (inputDir.magnitude > 0.1f)
                     {
                         animator.SetBool("walkFlag", true);
@@ -239,10 +240,23 @@ namespace Muryotaisu
             }
             else
             {
-                // 공중에 있을 때 (점프 중이거나 언덕에서 떨어질 때) 무조건 jumpFlag를 활성화
+                // 공중에 물리적으로 떠 있는 모든 순간(수직 상승 포함)에는 
+                // 땅 위의 변수들이 덮어쓰지 못하도록 점프 플래그를 완벽하게 고정 및 독점합니다.
                 animator.SetBool("jumpFlag", true);
                 animator.SetBool("walkFlag", false);
                 animator.SetBool("idleFlag", false);
+                second = 0f;
+
+
+                // 현재 실행 중인 레이어의 베이스 애니메이션 상태 정보를 가져옵니다.
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+                // 현재 재생 모션이 "Jump" 노드이고, 타임라인 진행률(normalizedTime)이 70%(0.7f)를 넘겼다면
+                // 다리를 다 오므린 고정 자세로 판단하여 재생 속도를 0으로 묶어버립니다. (파닥거리는 루프 방지)
+                if (stateInfo.IsName("Jump") && stateInfo.normalizedTime >= 0.7f)
+                {
+                    animator.speed = 0f;
+                }
             }
 
             moveDirection.y -= gravity * Time.deltaTime;
