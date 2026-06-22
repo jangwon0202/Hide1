@@ -32,6 +32,11 @@ namespace Muryotaisu
         private bool isFreeLooking = false;
         private float initialBodyY = 180f; // F키 누를 당시의 몸통 방향 백업
 
+        [Header("착지 경직 설정")]
+        public float minLandingStun = 0.8f; // 애니메이션이 끊기지 않고 끝까지 재생될 '최소' 보장 시간 (애니메이션 길이에 맞춰 조절!)
+        public float maxLandingStun = 1.8f; //  아무리 높은 곳에서 떨어져도 제한되는 '최대' 경직 시간
+        private float currentLandingDuration = 0.5f; // 이번 착지에 적용될 동적 경직 시간
+
         // 자유 시선 상태에서 마우스 움직임을 누적하기 위한 회전 변수
         private float xRotation = 0f;
         private float yRotation = 180f;
@@ -41,9 +46,18 @@ namespace Muryotaisu
 
         public float startKocchi = 2; // 카메라가 캐릭터와 얼마나 가까워졌을 때 캐릭터가 카메라를 쳐다보게 할지 결정하는 기준 거리 변수
 
+
+        private const float minLandTimeThreshold = 0.85f; // 이 시간(초) 이하면 착지 모션 생략
+        private string currentLandingAnim = ""; 
+
         float second; // 캐릭터가 idle 상태로 머무른 시간을 측정하는 변수
 
         private Vector3 moveDirection = Vector3.zero; // 캐릭터가 이동하는 방향과 속도를 나타내는 벡터 변수(X, Y, Z축 방향으로의 이동 속도를 각각 저장)
+
+        private float airTime = 0f;
+        private const float hardLandingThreshold = 2.0f; // 이 시간(초) 이상 떨어지면 세게 착지(Fall Land)로 판정
+        private float landTimer = 0f;       // 착지 후 흘러간 시간을 재는 타이머
+        private bool isLandingState = false; // 현재 착지 모션 강제 유지 중인지 체크하는 플래그
 
         // Start is called before the first frame update
         void Start()
@@ -187,43 +201,92 @@ namespace Muryotaisu
             // 공중 컨트롤을 위해 움직임(X, Z축) 계산을 isGrounded 밖으로 빼냈습니다.
             // Y축(중력 및 점프 힘) 수명은 보존하고, 이동 방향 수치만 갱신합니다.
             float currentY = moveDirection.y;
-            moveDirection = move * speed;
+            moveDirection = isLandingState ? Vector3.zero : move * speed;
             moveDirection.y = currentY;
 
-
-                // -------------- 바닥 판정 및 애니메이션 처리 --------------
+            // -------------- 바닥 판정 및 애니메이션 처리 --------------
             string currentState = ""; // 현재 상태 로깅용 변수
 
             if (controller.isGrounded)
             {
-                // [수정점] 중력이 끝없이 누적되는 것을 방지합니다. 
-                // 땅에 오래 서 있을 때 중력이 무한히 더해지면 점프를 뛰어도 경사면 판정에 파묻혀 isGrounded가 고장나고 점프가 씹히는 원인이 됩니다.
-                // 단, jumpSpeed가 들어가서 y가 양수(위로 솟구침)일 때는 중력 리셋을 막아야 무한 점프가 안 됩니다.
+                // 중력이 바닥에 무한히 누적되어 파묻히는 현상 보정 및 고정
                 if (moveDirection.y < 0)
                 {
-                    moveDirection.y = -2f; // 바닥에 확실히 밀착되게 약간의 음수값만 유지
+                    moveDirection.y = -2f;
                 }
 
-                // 땅에 닿아 있다면 기본적으로 jump 플래그를 꺼줍니다.
-                // 단, 점프를 막 누른 프레임(moveDirection.y > 0)일 때는 끄지 않습니다.
-                if (moveDirection.y <= 0)
+                animator.speed = 1.0f;
+
+                // 💡 [착지 판단 및 고정 타이머 매커니즘]
+                if (isLandingState)
+                {
+                    landTimer += Time.deltaTime;
+                    if (landTimer >= 0.5f)
+                    {
+                        // 착지 애니메이션 강제 대기 0.5초가 끝나면 완벽하게 지상 상태 초기화
+                        isLandingState = false;
+                        landTimer = 0f;
+                    }
+                }
+
+                // 💡 땅에 닿았을 때 Fall 상태에서 누적되던 airTime 계산 및 딱 멈추기
+                if (airTime > 0f && moveDirection.y <= 0)
                 {
                     animator.SetBool("jumpFlag", false);
+                    animator.SetBool("fallFlag", false); // 낙하 궤도에서 완벽 탈출!
+
+                    //  [요구사항 2]: 체공 시간(airTime)이 일정 시간(0.2초) 이상일 때만 Land 발동
+                    if (airTime >= minLandTimeThreshold)
+                    {
+                        animator.SetBool("walkFlag", false);
+                        animator.SetBool("idleFlag", false);
+
+                        // 착지 0.5초 락 시동
+                        isLandingState = true;
+                        landTimer = 0f;
+
+                        currentLandingDuration = Mathf.Clamp(airTime, minLandingStun, maxLandingStun);
+
+                        if (airTime >= hardLandingThreshold)
+                        {
+                            animator.SetTrigger("fallLandTrigger");
+                            currentLandingAnim = "fall land"; // [요구사항 3] 이름 백업
+                            currentState = $"쿵! 높은 추락 착지 ({currentLandingAnim}) | airTime: {airTime:F2}s";
+                        }
+                        else
+                        {
+                            animator.SetTrigger("jumpLandTrigger");
+                            currentLandingAnim = "jump land"; // [요구사항 3] 이름 백업
+                            currentState = $"사뿐, 낮은 추락 착지 ({currentLandingAnim}) | airTime: {airTime:F2}s";
+                        }
+                    }
+                    else
+                    {
+                        // 💡 제자리 점프처럼 airTime이 아주 적은 시간일 때는 Land 애니메이션 락을 걸지 않고 패스
+                        currentState = $"짧은 체공 착지 (Land 생략) | airTime: {airTime:F2}s";
+                    }
+
+                    airTime = 0f; // 연산 끝났으니 공중 시간 완전 리셋
                 }
 
-                if (Input.GetKeyDown(KeyCode.Space))
+                // 점프 입력 (착지 경직 중에는 불가능)
+                if (Input.GetKeyDown(KeyCode.Space) && !isLandingState)
                 {
                     moveDirection.y = jumpSpeed;
-                    
-                    // 점프가 실행되는 순간 즉시 jumpFlag를 켭니다 (딜레이 방지)
-                    animator.SetBool("jumpFlag", true);
+                    second = 0f;
+                    airTime = 0f;
+
                     animator.SetBool("walkFlag", false);
                     animator.SetBool("idleFlag", false);
-                    second = 0f;
+                    animator.SetBool("jumpFlag", true);
                     currentState = "점프 시작!";
                 }
-                else if (moveDirection.y <= 0) // 점프를 뛰고 솟구치는 찰나가 아닐 때만 걷기/대기 모션 실행
+                // 경직이 완전히 풀렸을 때만(isLandingState == false) 걷기/대기 허용
+                else if (moveDirection.y <= 0 && !isLandingState)
                 {
+                    animator.SetBool("jumpFlag", false);
+                    animator.SetBool("fallFlag", false);
+
                     if (inputDir.magnitude > 0.1f)
                     {
                         animator.SetBool("walkFlag", true);
@@ -236,7 +299,7 @@ namespace Muryotaisu
                         animator.SetBool("walkFlag", false);
                         animator.SetBool("idleFlag", true);
 
-                        second += Time.deltaTime; // 움직이지 않을 때만 시간 측정
+                        second += Time.deltaTime;
                         if (second >= 15f)
                         {
                             animator.SetTrigger("idleBFlag");
@@ -249,19 +312,46 @@ namespace Muryotaisu
                         }
                     }
                 }
+                else if (isLandingState)
+                {
+                    // 착지 중일 때는 동적으로 설정된 전체 경직 시간 대비 흐른 시간을 보여줌
+                    currentState = $"착지 모션 강제 유지 중 ({currentLandingAnim} | {landTimer:F2}s / {currentLandingDuration:F2}s) - [🛑현재 이동 불가 경직 상태!]";
+                }
             }
             else
             {
-                // 공중에 있을 때 (점프 중이거나 언덕에서 떨어질 때) 무조건 jumpFlag를 활성화
-                animator.SetBool("jumpFlag", true);
-                animator.SetBool("walkFlag", false);
-                animator.SetBool("idleFlag", false);
-                currentState = "공중 (Jump/Fall)";
+                second = 0f;
+
+                // 💡 [네 기획안 상태 다이어그램 연산부]
+                if (moveDirection.y > 0)
+                {
+                    // 1단계: 위로 인위적으로 솟구쳐 날아가는 구간 -> 무조건 jumpFlag 독점
+                    animator.SetBool("jumpFlag", true);
+                    animator.SetBool("fallFlag", false);
+                    airTime = 0f; // 상승 중에는 타이머 작동 안 함
+                    currentState = "위로 상승 중 (Jump 상태)";
+                }
+                else
+                {
+                    // 2단계: 정점 찍고 마이너스로 꺾여서 떨어지는 순간 -> fallFlag 돌입
+                    animator.SetBool("jumpFlag", false);
+                    animator.SetBool("fallFlag", true);
+
+                    // 💡 딱 이 Fall이 시작된 시점부터 순수하게 체공 시간 측정 시작
+                    airTime += Time.deltaTime;
+                    currentState = $"중력 낙하 중 (fall 상태 | airTime: {airTime:F2}s)";
+                }
+
+                // 💡 공중 70% 모션 홀딩 연동 (fall 상태가 너무 파닥거리면 동결)
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                if (stateInfo.IsName("fall") && stateInfo.normalizedTime >= 0.7f)
+                {
+                    animator.speed = 0f;
+                }
             }
 
-            // 로그 출력: 움직일 때나 공중에 있을 때만 상태를 보여주거나 매 프레임 다 띄울 수 있음.
-            // 너무 자주 뜨는 걸 피하려면 조건문을 넣어도 좋지만, 정확한 파악을 위해 그냥 찍어줍니다.
-            Debug.Log($"현재 상태: {currentState} | isGrounded: {controller.isGrounded} | jumpFlag: {animator.GetBool("jumpFlag")} | walkFlag: {animator.GetBool("walkFlag")}");
+            // 로그 출력
+            Debug.Log($"현재 상태: {currentState} | 체공 시간: {airTime:F2}s | isGrounded: {controller.isGrounded}");
 
             moveDirection.y -= gravity * Time.deltaTime;
             controller.Move(moveDirection * Time.deltaTime);
