@@ -132,7 +132,7 @@ namespace Muryotaisu
             {
                 // [일반 모드]: 마우스 돌리는 대로 시선 회전
                 yRotation += mouseX;
-
+                
                 if (isFirstPerson)
                 {
                     // 1인칭일 때만 몸통이 마우스 회전을 똑같이 따라감
@@ -217,23 +217,12 @@ namespace Muryotaisu
 
             if (controller.isGrounded)
             {
-<<<<<<< HEAD
                 // 중력이 바닥에 무한히 누적되어 파묻히는 현상 보정 및 고정
-=======
-
-                // 중력이 바닥에 무한히 누적되어 파묻히는 현상 보정
-
-                // 중력이 끝없이 누적되는 것을 방지
-                // 땅에 오래 서 있을 때 중력이 무한히 더해지면 점프를 뛰어도 경사면 판정에 파묻혀 isGrounded가 고장나고 점프가 씹히는 원인이 됩니다.
-                // 단, jumpSpeed가 들어가서 y가 양수(위로 솟구침)일 때는 중력 리셋을 막아야 무한 점프가 안 됩니다.
-
->>>>>>> main
                 if (moveDirection.y < 0)
                 {
                     moveDirection.y = -2f;
                 }
 
-<<<<<<< HEAD
                 animator.speed = 1.0f;
 
                 // 💡 [착지 판단 및 고정 타이머 매커니즘]
@@ -250,15 +239,6 @@ namespace Muryotaisu
 
                 // 💡 땅에 닿았을 때 Fall 상태에서 누적되던 airTime 계산 및 딱 멈추기
                 if (airTime > 0f && moveDirection.y <= 0)
-=======
-
-                // 💡 땅에 닿았으므로 일시정지했던 애니메이터 재생 속도를 정상(1배속)으로 완전히 풀어줍니다.
-                animator.speed = 1.0f;
-
-                // 땅에 닿아 있다면 기본적으로 jump 플래그를 꺼줍니다.
-                // 단, 점프를 막 누른 프레임(moveDirection.y > 0)일 때는 끄지 않습니다.
-                if (moveDirection.y <= 0)
->>>>>>> main
                 {
                     animator.SetBool("jumpFlag", false);
                     animator.SetBool("fallFlag", false); // 낙하 궤도에서 완벽 탈출!
@@ -297,7 +277,6 @@ namespace Muryotaisu
                     airTime = 0f; // 연산 끝났으니 공중 시간 완전 리셋
                 }
 
-<<<<<<< HEAD
                 // 점프 입력 (착지 경직 중에는 불가능)
                 if (Input.GetKeyDown(KeyCode.Space) && !isLandingState && jumpCoolTimer <= 0f)
                 {
@@ -308,20 +287,6 @@ namespace Muryotaisu
                     //  점프하는 순간 쿨타임을 다시 꽉 채워줍니다!
                     jumpCoolTimer = jumpCoolTime;
 
-=======
-
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    moveDirection.y = jumpSpeed;
-
-
-                    // 점프가 시작되는 첫 프레임에는 땅 위 애니메이션을 즉시 끕니다.
-
-                    
-                    // 점프가 실행되는 순간 즉시 jumpFlag를 켭니다 (딜레이 방지)
-
-                    animator.SetBool("jumpFlag", true);
->>>>>>> main
                     animator.SetBool("walkFlag", false);
                     animator.SetBool("idleFlag", false);
                     animator.SetBool("jumpFlag", true);
@@ -331,13 +296,8 @@ namespace Muryotaisu
                 // 경직이 완전히 풀렸을 때만(isLandingState == false) 걷기/대기 허용
                 else if (moveDirection.y <= 0 && !isLandingState)
                 {
-<<<<<<< HEAD
                     animator.SetBool("jumpFlag", false);
                     animator.SetBool("fallFlag", false);
-=======
-                    //  바닥에 확실히 착지한 유효 프레임에서만 점프 플래그를 정상 해제합니다.
-                    animator.SetBool("jumpFlag", false);
->>>>>>> main
 
                     if (inputDir.magnitude > 0.1f)
                     {
@@ -372,7 +332,6 @@ namespace Muryotaisu
             }
             else
             {
-<<<<<<< HEAD
                 second = 0f;
 
                 animator.SetBool("walkFlag", false);
@@ -409,27 +368,6 @@ namespace Muryotaisu
                     }
                 }
 
-=======
-                // 공중에 물리적으로 떠 있는 모든 순간(수직 상승 포함)에는 
-                // 땅 위의 변수들이 덮어쓰지 못하도록 점프 플래그를 완벽하게 고정 및 독점합니다.
-                animator.SetBool("jumpFlag", true);
-                animator.SetBool("walkFlag", false);
-                animator.SetBool("idleFlag", false);
-
-                second = 0f;
-
-
-                // 현재 실행 중인 레이어의 베이스 애니메이션 상태 정보를 가져옵니다.
-                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-                // 현재 재생 모션이 "Jump" 노드이고, 타임라인 진행률(normalizedTime)이 70%(0.7f)를 넘겼다면
-                // 다리를 다 오므린 고정 자세로 판단하여 재생 속도를 0으로 묶어버립니다. (파닥거리는 루프 방지)
-                if (stateInfo.IsName("Jump") && stateInfo.normalizedTime >= 0.7f)
-                {
-                    animator.speed = 0f;
-                }
-                currentState = "공중 (Jump/Fall)";
->>>>>>> main
 
             }
 
