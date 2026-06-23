@@ -258,13 +258,13 @@ namespace Muryotaisu
                         if (airTime >= hardLandingThreshold)
                         {
                             animator.SetTrigger("fallLandTrigger");
-                            currentLandingAnim = "fall land"; // [요구사항 3] 이름 백업
+                            currentLandingAnim = "fall land"; // 이름 백업
                             currentState = $"쿵! 높은 추락 착지 ({currentLandingAnim}) | airTime: {airTime:F2}s";
                         }
                         else
                         {
                             animator.SetTrigger("jumpLandTrigger");
-                            currentLandingAnim = "jump land"; // [요구사항 3] 이름 백업
+                            currentLandingAnim = "jump land"; // 이름 백업
                             currentState = $"사뿐, 낮은 추락 착지 ({currentLandingAnim}) | airTime: {airTime:F2}s";
                         }
                     }
@@ -290,6 +290,7 @@ namespace Muryotaisu
                     animator.SetBool("walkFlag", false);
                     animator.SetBool("idleFlag", false);
                     animator.SetBool("jumpFlag", true);
+                    animator.Play("Jump", -1, 0f);
                     currentState = "점프 시작!";
                 }
                 // 경직이 완전히 풀렸을 때만(isLandingState == false) 걷기/대기 허용
@@ -333,7 +334,9 @@ namespace Muryotaisu
             {
                 second = 0f;
 
-                // 💡 [네 기획안 상태 다이어그램 연산부]
+                animator.SetBool("walkFlag", false);
+                animator.SetBool("idleFlag", false);
+                // [네 기획안 상태 다이어그램 연산부]
                 if (moveDirection.y > 0)
                 {
                     // 1단계: 위로 인위적으로 솟구쳐 날아가는 구간 -> 무조건 jumpFlag 독점
@@ -344,13 +347,25 @@ namespace Muryotaisu
                 }
                 else
                 {
-                    // 2단계: 정점 찍고 마이너스로 꺾여서 떨어지는 순간 -> fallFlag 돌입
+                    // 정점 찍고 마이너스로 꺾여서 떨어지는 순간
                     animator.SetBool("jumpFlag", false);
-                    animator.SetBool("fallFlag", true);
 
-                    // 💡 딱 이 Fall이 시작된 시점부터 순수하게 체공 시간 측정 시작
+                    //  딱 이 순간부터 체공 시간(떨어진 시간) 측정 시작
                     airTime += Time.deltaTime;
-                    currentState = $"중력 낙하 중 (fall 상태 | airTime: {airTime:F2}s)";
+
+                    //  떨어지기 시작했어도 0.1초가 넘기 전까지는 fallFlag를 켜지 않음!
+                    //
+                    if (airTime > 0.1f)
+                    {
+                        animator.SetBool("fallFlag", true);
+                        currentState = $"중력 낙하 중 (fall 상태 | airTime: {airTime:F2}s)";
+                    }
+                    else
+                    {
+                        // 0.1초 이하의 짧은 하강은 Jump 모션의 잔공 체공을 그대로 유지 (어색한 덜덜거림 방지)
+                        animator.SetBool("fallFlag", false);
+                        currentState = $"짧은 낙하 대기 중 (잔공 체공 | airTime: {airTime:F2}s)";
+                    }
                 }
 
 
