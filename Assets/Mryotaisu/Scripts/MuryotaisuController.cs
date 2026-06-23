@@ -48,7 +48,10 @@ namespace Muryotaisu
 
 
         private const float minLandTimeThreshold = 0.85f; // 이 시간(초) 이하면 착지 모션 생략
-        private string currentLandingAnim = ""; 
+        private string currentLandingAnim = "";
+
+        private float jumpCoolTime = 0.89f; // 점프 후 다음 점프까지의 최소 시간
+        private float jumpCoolTimer = 0f; // 점프 후 경과 시간을 측정하는 타이머
 
         float second; // 캐릭터가 idle 상태로 머무른 시간을 측정하는 변수
 
@@ -87,6 +90,11 @@ namespace Muryotaisu
         // Update is called once per frame
         void Update()
         {
+            if (jumpCoolTimer > 0f)
+            {
+                jumpCoolTimer -= Time.deltaTime;
+            }
+
             if (cmCamera == null) return;
 
             // 시점 전환 (V 키)
@@ -270,11 +278,14 @@ namespace Muryotaisu
                 }
 
                 // 점프 입력 (착지 경직 중에는 불가능)
-                if (Input.GetKeyDown(KeyCode.Space) && !isLandingState)
+                if (Input.GetKeyDown(KeyCode.Space) && !isLandingState && jumpCoolTimer <= 0f)
                 {
                     moveDirection.y = jumpSpeed;
                     second = 0f;
                     airTime = 0f;
+
+                    //  점프하는 순간 쿨타임을 다시 꽉 채워줍니다!
+                    jumpCoolTimer = jumpCoolTime;
 
                     animator.SetBool("walkFlag", false);
                     animator.SetBool("idleFlag", false);
