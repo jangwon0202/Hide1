@@ -50,7 +50,7 @@ namespace Muryotaisu
         private const float minLandTimeThreshold = 0.85f; // 이 시간(초) 이하면 착지 모션 생략
         private string currentLandingAnim = "";
 
-        private float jumpCoolTime = 0.89f; // 점프 후 다음 점프까지의 최소 시간
+        private float jumpCoolTime = 0.2f; // 점프 후 다음 점프까지의 최소 시간
         private float jumpCoolTimer = 0f; // 점프 후 경과 시간을 측정하는 타이머
 
         float second; // 캐릭터가 idle 상태로 머무른 시간을 측정하는 변수
@@ -353,12 +353,7 @@ namespace Muryotaisu
                     currentState = $"중력 낙하 중 (fall 상태 | airTime: {airTime:F2}s)";
                 }
 
-                // 💡 공중 70% 모션 홀딩 연동 (fall 상태가 너무 파닥거리면 동결)
-                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-                if (stateInfo.IsName("fall") && stateInfo.normalizedTime >= 0.7f)
-                {
-                    animator.speed = 0f;
-                }
+
             }
 
             // 로그 출력
